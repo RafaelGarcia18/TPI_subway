@@ -1,0 +1,33 @@
+version: '3.7'
+
+services: 
+    laravel-db:
+        image: 'mariadb:10.3.5'
+        environment: 
+            MYSQL_ROOT_PASSWORD: 'contrasenia'
+            MYSQL_DATABASE: 'tpi_subway'
+        volumes: 
+            - ./database/schemas/:/var/lib/mysql
+    laravel-prod:
+        build: 
+            context: ./
+            dockerfile: back.dockerfile
+        volumes: 
+            - ./TPI_subway_backend:/var/www/
+            - ./TPI_subway_backend/public:/var/www/html
+        depends_on: 
+            - laravel-db
+        ports: 
+            - 8081:80
+    vuejs-prod:
+        build: 
+            context: ./
+            dockerfile: front.dockerfile
+        ports: 
+            - 8080:80
+        depends_on: 
+            - laravel-prod
+volumes: 
+    TPI_subway_backend:
+    database:
+        
